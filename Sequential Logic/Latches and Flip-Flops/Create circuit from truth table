@@ -1,0 +1,21 @@
+module top_module (
+    input clk,
+    input j,
+    input k,
+    output reg Q); //Q is equal to Qold and D is Qnew
+    
+    wire D;
+    always @(posedge clk) begin
+        Q <= D;
+    end
+    
+    always @(*) begin
+        case({j,k})
+        2'b00	:	D = Q;
+        2'b01   :	D = 2'b00;
+        2'b10   :	D = 2'b01;
+        2'b11   :	D = ~Q;
+        endcase
+    end
+
+endmodule

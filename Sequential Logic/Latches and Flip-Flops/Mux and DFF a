@@ -1,0 +1,22 @@
+module top_module (
+    input clk,
+    input w, R, E, L,
+    output reg Q
+);
+    wire [1:0] sel;
+    wire D;
+   
+    always @(posedge clk) begin
+        	Q <= D ; 
+    end
+    
+    assign sel = {L,E};
+    always @(*) begin
+        casex(sel) 
+            2'b00 :	D = Q;	 
+            2'b1x :	D = R;
+            2'b01 :	D = w;
+        endcase
+	end
+            
+endmodule
