@@ -1,0 +1,42 @@
+module top_module(
+    input clk,
+    input areset,  // async active-high reset to zero
+    input load,
+    input ena,
+    input [3:0] data,
+    output reg [3:0] q); 
+
+unit_reg u0(.shift_in(0),    .data(data[3]), .clk(clk), .areset(areset), .load(load), .ena(ena), .q(q[3]));
+unit_reg u1(.shift_in(q[3]), .data(data[2]), .clk(clk), .areset(areset), .load(load), .ena(ena), .q(q[2]));
+unit_reg u2(.shift_in(q[2]), .data(data[1]), .clk(clk), .areset(areset), .load(load), .ena(ena), .q(q[1]));
+unit_reg u3(.shift_in(q[1]), .data(data[0]), .clk(clk), .areset(areset), .load(load), .ena(ena), .q(q[0]));
+
+endmodule
+
+
+
+module unit_reg(
+    input shift_in,
+    input data,
+    input clk,
+    input areset,
+    input load,
+    input ena,
+    output reg q
+);
+
+always @(posedge clk or posedge areset) begin
+    if(areset) begin
+         q <= 1'b0;
+    end
+    else begin  //case문  타이밍
+        if(load) begin
+            q <= data;
+        end
+        else begin
+            q <= ena ? shift_in : q ;
+        end
+    end
+    end
+
+endmodule

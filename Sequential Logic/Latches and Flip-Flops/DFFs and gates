@@ -1,0 +1,28 @@
+module top_module (
+    input clk,
+    input x,
+    output z
+); 
+    reg [2:0] Q;
+    reg [2:0] Qn;
+    always @(*) begin
+    	Qn = ~Q;
+    end
+    wire [2:0] D;
+    wire D0,D1,D2;
+    assign D0 = x||Qn[0];
+    assign D1 = x&&Qn[1];
+    assign D2 = x^^Q[2];
+    assign D = {D2,D1,D0}; //조합회로를 case문이 아닌 이렇게 표현해도 되나...?  상태머신인데 
+    
+   
+    always @(posedge clk) begin
+        	Q <= D ; 
+    end
+    
+    
+    assign z = ~|Q; //비트 연산자 문법 복습!
+    
+            
+endmodule
+
