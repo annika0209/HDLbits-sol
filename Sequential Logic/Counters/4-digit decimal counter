@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input reset,   // Synchronous active-high reset
@@ -63,3 +64,70 @@ endmodule
     */
       
 
+=======
+module top_module (
+    input clk,
+    input reset,   // Synchronous active-high reset
+    output [3:1] ena,
+    output [15:0] q);
+
+
+    BCD_counter_unit #(.roll_up(10)) u_BCD_cnt0 (.clk(clk), .reset(reset), .ena(1), .q(q[3:0]));
+    BCD_counter_unit #(.roll_up(10)) u_BCD_cnt1(.clk(clk), .reset(reset), .ena(ena[1]), .q(q[7:4]));
+    BCD_counter_unit #(.roll_up(10)) u_BCD_cnt2(.clk(clk), .reset(reset), .ena(ena[2]), .q(q[11:8]));
+    BCD_counter_unit #(.roll_up(10)) u_BCD_cnt3(.clk(clk), .reset(reset), .ena(ena[3]), .q(q[15:12]));
+    
+    //activating the next stage logic 
+    assign ena[1] = (q[3:0] == 4'b1001);
+    assign ena[2] = (q[7:0] == 8'b10011001);
+    assign ena[3] = (q[11:0]== 12'b100110011001);
+    
+
+    
+endmodule
+
+    module BCD_counter_unit #(parameter roll_up = 10)
+(
+	input clk,
+    input reset,
+    input ena,
+    output [3:0] q
+);
+    always @(posedge clk) begin
+        if(reset) begin
+           q <= 4'b0; 
+        end
+        else if( (q==(roll_up-1)) && ena) begin //처음에 이 부분의 &&ena를 빼먹음
+           	q <= 4'b0;
+        end
+    	else  begin
+            q <= ena ? (q+4'b1):q ;
+            end
+        
+    end
+	endmodule
+
+
+/*module BCD_counter_unit(
+	input clk,
+    input reset,
+    input ena,
+    output [3:0] q
+);
+    always @(posedge clk) begin
+        if(reset) begin
+           q <= 4'b0; 
+        end
+        else if((q==4'd9)&&ena) begin //이 부분의 &&ena를 빼먹음
+           	q <= 4'b0;
+        end
+    	else  begin
+            q <= ena ? (q+4'b1):q ;
+            end
+        
+    end
+    endmodule  
+    */
+      
+
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75

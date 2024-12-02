@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module(
     input clk,
     input reset,
@@ -95,4 +96,103 @@ module BCD_counter_unit #(parameter roll_up = 10, parameter reset_val = 0)
         
     end
 
+=======
+module top_module(
+    input clk,
+    input reset,
+    input ena,
+    output reg pm,
+    output [7:0] hh,
+    output [7:0] mm,
+    output [7:0] ss); 
+    
+    wire ena_mm, ena_hh; 
+    BCD_counter_60 u_BCD_cnt_ss(.clk(clk), .reset(reset), .ena(ena), .next_ena(ena_mm), .q(ss));
+    BCD_counter_60 u_BCD_cnt_mm(.clk(clk), .reset(reset), .ena(ena_mm), .next_ena(ena_hh), .q(mm));
+    BCD_counter_12 u_BCD_cnt_hh(.clk(clk), .reset(reset), .ena(ena_hh), .hh(hh));
+	
+    wire [23:0] total_time;
+    assign total_time = {hh,mm,ss};
+    
+    always @(posedge clk) begin
+            if(reset) begin 
+                pm <= 0;
+            end
+
+            else begin
+                if(total_time == 24'h115959) begin
+                    pm <= ~pm;
+                end
+            end
+    end
+  
+endmodule
+
+
+
+module BCD_counter_60  (
+    input clk,
+    input reset,
+    input ena,
+    output [7:0] q,
+    output next_ena
+);
+    BCD_counter_unit   #(.roll_up (10), .reset_val(0)) u_0(.clk(clk), .reset(reset), .ena(ena), .q(q[3:0]));
+    BCD_counter_unit   #(.roll_up (6), .reset_val(0)) u_1(.clk(clk), .reset(reset), .ena(ena_59), .q(q[7:4]));
+
+    wire ena_59 ;
+    assign ena_59 = (q[3:0] == 4'b1001) && ena; //여기서 &&ena 실수함
+    assign next_ena = ((q[7:4] == 4'h5) && ena_59) ;
+
+endmodule
+
+module BCD_counter_12 (
+    input clk,
+    input reset,
+    input ena,
+    output [7:0] hh
+);
+    wire [3:0] q ;
+    BCD_counter_unit   #(.roll_up (12), .reset_val(4'b1011)) u_0(.clk(clk), .reset(reset), .ena(ena), .q(q[3:0]));
+
+    // hh의 앞 뒤 자리에 조합회로 남발하면 글리치가 우려되긴 함...
+
+    always @(*) begin
+        casex(q) 
+        4'b0xxx    : hh = {4'h00, (q + 4'h1)};
+        4'b1000    : hh = {4'h00, (q + 4'h1)};
+        4'b1001    : hh = 8'h10;
+        4'b1010    : hh = 8'h11;
+        4'b1011    : hh = 8'h12;
+        default : hh = 8'h01;
+
+        endcase
+    end
+
+endmodule
+
+module BCD_counter_unit #(parameter roll_up = 10, parameter reset_val = 0)
+(
+	input clk,
+    input reset,
+    input ena,
+    output [3:0] q
+);
+    always @(posedge clk) begin
+        if(reset) begin
+           q <= reset_val; 
+        end
+        else if( (q==(roll_up-1)) && ena) begin //처음에 이 부분의 &&ena를 빼먹음
+           	q <= 4'b0;
+        end
+    	else  begin
+            if(ena) begin
+                q <= q+4'b1;
+            end
+            //q <= ena ? (q+4'b1):q ;
+            end
+        
+    end
+
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75
 endmodule

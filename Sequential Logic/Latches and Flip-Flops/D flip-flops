@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input [7:0] d,
@@ -7,4 +8,15 @@ module top_module (
        q <= d;
     end
 
+=======
+module top_module (
+    input clk,
+    input [7:0] d,
+    output [7:0] q
+);
+    always @(posedge clk) begin
+       q <= d;
+    end
+
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75
 endmodule

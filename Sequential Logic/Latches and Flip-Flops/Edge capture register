@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input reset,
@@ -32,3 +33,39 @@ module nedge_detector (
         nedge = (~in)&in_old;
     end
 endmodule
+=======
+module top_module (
+    input clk,
+    input reset,
+    input [31:0] in,
+    output [31:0] out
+);
+    reg [31:0] nedge;
+    nedge_detector u_nedge_detector(.clk(clk), .in(in), .nedge(nedge));
+    always @(posedge clk ) begin
+        if(reset) begin
+            out <= 32'b0; 
+        end
+        else begin
+            out <= out|nedge;
+    	end
+  	end
+
+endmodule
+
+
+
+module nedge_detector (
+    input clk,
+    input [31:0] in,
+    output reg [31:0] nedge
+);
+    reg [31:0] in_old;
+    always @(posedge clk) begin
+        in_old <= in;
+    end
+    always @(*) begin
+        nedge = (~in)&in_old;
+    end
+endmodule
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75

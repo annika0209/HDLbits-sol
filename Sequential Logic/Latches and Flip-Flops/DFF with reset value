@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input reset,
@@ -14,3 +15,21 @@ module top_module (
     end
 
 endmodule
+=======
+module top_module (
+    input clk,
+    input reset,
+    input [7:0] d,
+    output [7:0] q
+);
+    always @(negedge clk) begin
+        if(reset) begin
+            q <= 8'h0x34;
+        end
+        else begin 
+            q <= d;
+        end
+    end
+
+endmodule
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75

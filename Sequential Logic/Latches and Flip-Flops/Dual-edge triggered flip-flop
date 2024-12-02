@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input d,
@@ -21,3 +22,28 @@ module top_module (
     end
 
 endmodule
+=======
+module top_module (
+    input clk,
+    input d,
+    output q
+);
+	reg q_posedge, q_negedge;  // Flip-flop registers for positive and negative edges
+
+    always @(posedge clk) begin
+            q_posedge <= d;
+    end
+    
+    always @(negedge clk) begin
+            q_negedge <= d;
+    end
+    
+    always @(*) begin
+        if (clk)
+            q = q_posedge;
+        else
+            q = q_negedge;
+    end
+
+endmodule
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75

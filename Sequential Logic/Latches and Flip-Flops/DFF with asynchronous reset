@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input areset,   // active high asynchronous reset
@@ -13,4 +14,21 @@ module top_module (
         end
     end
 
+=======
+module top_module (
+    input clk,
+    input areset,   // active high asynchronous reset
+    input [7:0] d,
+    output [7:0] q
+);
+    always @(posedge clk, posedge areset) begin
+        if(areset) begin
+            q <= 8'h0x00;
+        end
+        else begin 
+            q <= d;
+        end
+    end
+
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75
 endmodule

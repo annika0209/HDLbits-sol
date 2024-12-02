@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module top_module (
     input clk,
     input [7:0] in,
@@ -16,3 +17,23 @@ module top_module (
 
 
 endmodule
+=======
+module top_module (
+    input clk,
+    input [7:0] in,
+    output reg [7:0] pedge
+);
+    reg [7:0] in_old;
+    always @(posedge clk) begin
+        in_old <= in;
+    end
+    
+    //assign pedge = in&(~in_old);
+
+    always @(posedge clk) begin
+        pedge <= in&(~in_old);
+    end
+
+
+endmodule
+>>>>>>> d96ee98fb7d32fd804ae8ec4881a76e286ef3d75
