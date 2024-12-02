@@ -1,0 +1,7 @@
+git init
+git add .  #커밋 리스트에 업데이트할 파일 추가,  . 쓰면 변경사항 모두 추가
+git commit -m "commit message"
+git push origin main
+
+
+git remote add origin <등록된 원격 서버 주소> 

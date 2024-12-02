@@ -16,7 +16,7 @@ unit_reg u3(.shift_in(q0[1]), .data(data[0]), .clk(clk), .areset(areset), .load(
 
 always @(*) begin
     q=q0;
-end
+end 
 endmodule
 
 
