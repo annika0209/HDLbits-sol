@@ -13,7 +13,6 @@ module top_module(
     // XOR_D[3] = q[2] ^ q[4];
     // ...
     // XOR_D[510] = q[509] ^ q[511];
-
     
     // COMBINATIONAL LOGIC OF XOR_D
     assign  XOR_D[0] =   1'b0  ^ q[1];
