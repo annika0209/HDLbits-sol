@@ -1,0 +1,36 @@
+
+module top_module(
+    input clk,
+    input load,
+    input [511:0] data,
+    output  reg [511:0] q ); 
+
+    wire    [511:0] XOR_D;
+    
+    // XOR_D[n] = q[n-1] ^ q[n+1];
+    // XOR_D[1] = q[0] ^ q[2];
+    // XOR_D[2] = q[1] ^ q[3];
+    // XOR_D[3] = q[2] ^ q[4];
+    // ...
+    // XOR_D[510] = q[509] ^ q[511];
+
+    
+    // COMBINATIONAL LOGIC OF XOR_D
+    assign  XOR_D[0] =   1'b0  ^ q[1];
+    assign  XOR_D[511] = q[510] ^ 1'b0;
+    genvar i;
+    generate	
+        for (i=1;i<511;i=i+1) begin: COMBI
+            assign  XOR_D[i] = q[i-1] ^ q[i+1];  
+        end
+    endgenerate
+
+    // SEQUENTIAL LOGIC OF XOR_D
+    always @(posedge clk) begin
+        if (load) begin
+                q    <=     data;
+        end
+        else    q    <=     XOR_D;
+    end
+    
+    endmodule
