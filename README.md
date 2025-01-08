@@ -18,3 +18,4 @@
 # annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0107
 # annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0107
 # annika0209      C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0108
+# annika0209      C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0108

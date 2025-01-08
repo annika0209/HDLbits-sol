@@ -1,0 +1,43 @@
+
+module top_module(
+    input clk,
+    input load,
+    input [511:0] data,
+    output  reg [511:0] q 
+    ); 
+    
+    wire    [511:0] Next_q;
+// COMBINATIONAL LOGIC OF Next_q
+    
+    assign  Next_q[0]   =    q[0];
+    //as same as the below...
+    // assign  Next_q[0]   =    (~q[1] & 1'b0)
+    //                         |(q[0] & 1'b1)
+    //                         |(q[1] & ~q[0] & 1'b0);
+    
+    assign  Next_q[511] =    q[510]|(q[511] & ~q[510]);
+    //as same as the below...
+    // assign  Next_q[511] =    (1'b1 & q[510])
+    //                         |(q[511] & ~q[510])
+    //                         |(1'b0 & ~q[511] & q[510]);
+    
+    
+    genvar i;
+    generate	
+        for (i=0;i<510;i=i+1) begin: COMBI
+            assign  Next_q[i+1] = (~q[i+2] & q[i])
+                                |(q[i+1] & ~q[i])
+                                |(q[i+2] & ~q[i+1] & q[i]);
+
+            end
+    endgenerate
+
+// SEQUENTIAL LOGIC OF Next_q
+    always @(posedge clk) begin
+        if (load) begin
+                q    <=     data;
+        end
+        else    q    <=     Next_q;
+    end
+    
+    endmodule
