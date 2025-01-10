@@ -32,3 +32,4 @@
 # annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_
 # annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0110
 # annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0110
+# annika0209      C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0110_끝
