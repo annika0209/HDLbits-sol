@@ -5,12 +5,12 @@ module top_module(
     input [255:0] data,
     output reg [255:0] q
 ); 
+
     wire [255:0] Next_q;
     reg [17:0] VirtualGrid [0:17]; // 18x18 가상 그리드
 
-    genvar i; 
-
     // VirtualGrid 생성
+    genvar i; 
     generate            //generate VS always@() 블락 복습하기
         for (i = 0; i < 16; i = i + 1) begin: GRID_MK
             always @(*) begin
@@ -42,7 +42,7 @@ module top_module(
     endgenerate
             
 // SEQUENTIAL LOGIC OF q
-        always @(posedge clk) begin
+    always @(posedge clk) begin
         if (load) begin
             q <= data; // 초기 데이터 로드
         end else begin
@@ -56,6 +56,7 @@ module UnitBox_3 (
     input [8:0] Grid3_in, // 3x3 배열 데이터를 9비트 벡터로 전달 (--> ****오답노트****)
     output reg Center_out // 중심 셀의 다음 상태
 );
+    
     wire [3:0] Sum;
 
     // 주변 셀 합산
