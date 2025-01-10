@@ -63,7 +63,7 @@ module UnitBox_3 (
                  Grid3_in[3] +            Grid3_in[5] +
                  Grid3_in[6] + Grid3_in[7] + Grid3_in[8];
 
-    // 상태 전환 로직
+    // Center값 전환 로직
     always @(*) begin
         casex (Sum)
             4'b000x : Center_out = 0;               // DEATH: 인구 부족
@@ -73,16 +73,3 @@ module UnitBox_3 (
         endcase
     end
 endmodule
-
-    // for (i=0;i<256;i=i+1) begin: COMBI
-    //     // assign  VirtualQ = {q[i],q,q[15]};
-    // wire   [1:0]    SUM;
-    
-
-
-    // generate   
-    //         for (i=0;i<16;i=i+1) begin: COMBI
-    //             assign  Next_q[16*i+15 : 16*i] = VirtualGrid[i];
-    //         end
-    // endgenerate
-    
