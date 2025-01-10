@@ -22,4 +22,12 @@
 =======
 # annika0209      C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0108
 # annika0209      C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0108
+<<<<<<< HEAD
 >>>>>>> 218c6c6fa8e2a00744a7e960576d263cc556a253
+=======
+# annika0209      C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0110
+>>>>>>> 0de6f4a395193e64406e0db7acb1afd416329f57
+# annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_
+# annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_
+# annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_
+# annika0209      C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0110
