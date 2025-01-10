@@ -1,0 +1,50 @@
+
+//////Rule 110 is a one-dimensional cellular automaton with interesting properties (such as being Turing-complete).
+
+// There is a one-dimensional array of cells (on or off). At each time step, the state of each cell changes. In Rule 110, the next state of each cell depends only on itself and its two neighbours
+
+
+module top_module(
+    input clk,
+    input load,
+    input [511:0] data,
+    output  reg [511:0] q ); 
+
+    wire    [511:0] Next_C;
+    
+    // COMBINATIONAL LOGIC OF Next_C
+    assign  Next_C[0] =   1'b0  ^ q[1];
+    assign  Next_C[511] = q[510] ^ 1'b0;
+
+    wire    [2:0]   LCR;
+    
+    genvar i;
+    generate	
+        for (i=1;i<511;i=i+1) begin: COMBI
+            // assign  Next_C[i] = q[i-1] ^ q[i+1];
+            assign  LCR[i] = q[(i+1):(i-1)];  
+            always @(*) begin
+                casex (LCR)
+                    3'b000  :   Next_C[i] = 0; 
+                    3'b001  :   Next_C[i] = 1; 
+                    3'b010  :   Next_C[i] = 1; 
+                    3'b011  :   Next_C[i] = 0; 
+                    3'b100  :   Next_C[i] = 1; 
+                    3'b101  :   Next_C[i] = 1; 
+                    3'b110  :   Next_C[i] = 1; 
+                    3'b111  :   Next_C[i] = 0; 
+                    default :   Next_C[i] = 0;
+                endcase
+            end
+        end
+    endgenerate
+
+    // SEQUENTIAL LOGIC OF Next_C
+    always @(posedge clk) begin
+        if (load) begin
+                q    <=     data;
+        end
+        else    q    <=     Next_C;
+    end
+    
+    endmodule
