@@ -9,15 +9,14 @@ module top_module(
     // wire [255:0] Next_q;
     
     //Making a virtual grid 
-    wire [ 17:0] VirtualQ; //18bit Virtual vector
+    // wire [ 17:0] VirtualQ; //18bit Virtual vector
     reg  [ 17:0] VirtualGrid [0:17]; //18X18 arbitrary grid
     
 
     //Assigning Wires between 'q' and 'grid' 
     genvar i;
     generate	
-        for (i=0;i<16;i=i+1) begin: COMBI
-            // assign  VirtualQ = {q[i],q,q[15]};
+        for (i=0;i<16;i=i+1) begin: GRID_MK
             always @(*) begin
                 VirtualGrid[i+1] = {q[i] , q , q[16*i + 15]};
             end
@@ -28,34 +27,57 @@ module top_module(
         VirtualGrid[0]  =   {q[240] , q[255:240] , q[255]};
         VirtualGrid[17]  =  {q[0]   , q[15:0]    , q[15]};
     end
-    
-    //checking logic
-    wire   [1:0]    SUM;
-    genvar i;
+    //
+    genvar i, col;
     generate	
-        for (i=0;i<256;i=i+1) begin: COMBI
-            // assign  VirtualQ = {q[i],q,q[15]};
-            casex (SUM)
-                0:    Next_q[i] = VirtualGrid
-                1:    Next_q[i] = VirtualGrid
-                2:    Next_q[i] = VirtualGrid
-                3:    Next_q[i] = VirtualGrid
-                default: 
-            endcase
-        end 
+        for (col=1;col<17;col=col+1) begin: Column 
+            for (i=1;i<17;i=i+1) begin: Vectors
+                UnitBox_3   uUnitBox_3(
+                    .Grid3_in(VirtualGrid[col-1:col+1][i+1:i-1]),
+                    .Center_out(VirtualGrid[col][i])
+                );
+            end 
+        end
     endgenerate
+            
 
 
-    
 endmodule
 
-    //(3X3 array) Checking Neighbours Sequential Logic of an UnitGrid
-    module UnitBox_3 (
-        input reg [2:0] Grid3_in [0:2],
-        output reg Center_out;
-    );
-        
-    endmodule
+//(3X3 array) Checking Neighbours Sequential Logic of an UnitGrid
+module UnitBox_3 (
+    input   reg [2:0] Grid3_in [0:2],
+    output  reg       Center_out;
+);
+    wire    [2:0] UnitGrid [0:2];
+    wire [3:0] Sum;
+
+// checking logic
+    assign  UnitGrid = Grid3_in;
+    assign  Sum =       UnitGrid[0][0]
+                    +   UnitGrid[0][1]
+                    +   UnitGrid[0][2]
+                    +   UnitGrid[1][0]
+                    // +   UnitGrid[1][1]
+                    +   UnitGrid[1][2]
+                    +   UnitGrid[2][0]
+                    +   UnitGrid[2][1]
+                    +   UnitGrid[2][2];
+always @(posedge clk) begin
+        casex (Sum)
+            4'b000x :    Center_out <= 0;               //DEATH <- lack of population
+            4'b0010 :    Center_out <= UnitGrid[1][1];  //maintain 
+            4'b0011 :    Center_out <=  1;              //live
+            default :    Center_out <=  0;              //DEATH <- overpopulation 
+        endcase
+end     	
+endmodule
+
+    // for (i=0;i<256;i=i+1) begin: COMBI
+    //     // assign  VirtualQ = {q[i],q,q[15]};
+    // wire   [1:0]    SUM;
+    
+
 
     // generate   
     //         for (i=0;i<16;i=i+1) begin: COMBI
