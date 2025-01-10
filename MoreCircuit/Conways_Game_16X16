@@ -1,0 +1,64 @@
+
+module top_module(
+    input clk,
+    input load,
+    input [255:0] data,
+    output [255:0] q 
+    ); 
+
+    wire [255:0] Next_q;
+    //Making a grid 
+    wire [ 17:0] VirtualQ; //18bit Virtual vector
+    reg  [ 17:0] VirtualGrid [0:17]; //18X18 arbitrary grid
+    
+
+    //Making nets between 'q' and 'grid' 
+    genvar i;
+    generate	
+        for (i=0;i<16;i=i+1) begin: COMBI
+            // assign  VirtualQ = {q[i],q,q[15]};
+            always @(*) begin
+                VirtualGrid[i+1] = {q[i] , q , q[16*i + 15]};
+            end
+        end 
+    endgenerate
+    
+    //checking logic
+    wire   [1:0]    SUM;
+    genvar i;
+    generate	
+        for (i=0;i<256;i=i+1) begin: COMBI
+            // assign  VirtualQ = {q[i],q,q[15]};
+            casex (SUM)
+                0:    Next_q[i] = VirtualGrid
+                1:    Next_q[i] = VirtualGrid
+                2:    Next_q[i] = VirtualGrid
+                3:    Next_q[i] = VirtualGrid
+                default: 
+            endcase
+        end 
+    endgenerate
+
+    always @(*) begin
+        VirtualGrid[0]  =   {q[240] , q[255:240] , q[255]};
+        VirtualGrid[17]  =  {q[0]   , q[15:0]    , q[15]};
+    end
+    
+    
+
+
+    //3X3 neighbours logic of an unit grid
+    generate   
+            for (i=0;i<16;i=i+1) begin: COMBI
+                assign  Next_q[16*i+15 : 16*i] = VirtualGrid[i];
+            end
+    endgenerate
+    
+    // SEQUENTIAL LOGIC OF Next_q
+    always @(posedge clk) begin
+        if (load) begin
+                q    <=     data;
+        end
+        else    q    <=     Next_q;
+    end
+endmodule
