@@ -3,30 +3,36 @@ module top_module(
     input clk,
     input load,
     input [255:0] data,
-    output [255:0] q 
-    ); 
+    output reg [255:0] q
+); 
 
+<<<<<<< HEAD
     // wire [255:0] Next_q;
     
     //Making a virtual grid 
     reg  [ 17:0] VirtualGrid [0:17]; //18X18 arbitrary grid
     // initial
     // $readmemb("InitLifeMap.mem",VirtualGrid);
+=======
+    wire [255:0] Next_q;
+    reg [17:0] VirtualGrid [0:17]; // 18x18 가상 그리드
+>>>>>>> 3649abad0195713268ecd6ef453653b0ce27084f
 
-    //Assigning Wires between 'q' and 'grid' 
-    genvar i;
-    generate	
-        for (i=0;i<16;i=i+1) begin: GRID_MK
+    // VirtualGrid 생성
+    genvar i; 
+    generate            //generate VS always@() 블락 복습하기
+        for (i = 0; i < 16; i = i + 1) begin: GRID_MK
             always @(*) begin
-                VirtualGrid[i+1] = {q[i] , q , q[16*i + 15]};
+                    VirtualGrid[i+1] = {q[16*i] ,q[16*i + 15 : 16*i], q[16*i + 15]};
             end
-        end 
+        end
     endgenerate
 
     always @(*) begin
-        VirtualGrid[0]  =   {q[240] , q[255:240] , q[255]};
-        VirtualGrid[17]  =  {q[0]   , q[15:0]    , q[15]};
+        VirtualGrid[0]  = {q[240], q[255:240], q[255]};
+        VirtualGrid[17] = {q[0], q[15:0], q[15]};
     end
+<<<<<<< HEAD
     //
     genvar i, col;
     generate	
@@ -36,25 +42,52 @@ module top_module(
                     .Grid3_in(VirtualGrid[col-1:col+1][i+1:i-1]),
                     .load(load),
                     .Center_out(VirtualGrid[col][i])
+=======
+    
+    // 3x3 UnitBox 모듈 연결
+    genvar col, row;
+    generate
+        for (col = 1; col <= 16; col = col + 1) begin: Columns
+            for (row = 1; row <= 16; row = row + 1) begin: Rows
+                UnitBox_3 uUnitBox_3 (
+                    .Grid3_in({
+                        VirtualGrid[col-1][row-1], VirtualGrid[col-1][row], VirtualGrid[col-1][row+1],
+                        VirtualGrid[col][row-1],   VirtualGrid[col][row],   VirtualGrid[col][row+1],
+                        VirtualGrid[col+1][row-1], VirtualGrid[col+1][row], VirtualGrid[col+1][row+1]
+                    }),
+                    .Center_out(Next_q[16*(col-1) + (row-1)])
+>>>>>>> 3649abad0195713268ecd6ef453653b0ce27084f
                 );
-            end 
+            end
         end
     endgenerate
             
-
-
+// SEQUENTIAL LOGIC OF q
+    always @(posedge clk) begin
+        if (load) begin
+            q <= data; // 초기 데이터 로드
+        end else begin
+            q <= Next_q; // 다음 상태로 업데이트
+        end
+    end
 endmodule
 
-//(3X3 array) Checking Neighbours Sequential Logic of an UnitGrid
+//(3X3 array) 'Checking Neighbours' Combinational Logic of Grid3_in
 module UnitBox_3 (
+<<<<<<< HEAD
     input   reg [2:0]   Grid3_in [0:2],
     input   wire        load,
     input   wire        data,
     output  reg         Center_out;
+=======
+    input [8:0] Grid3_in, // 3x3 배열 데이터를 9비트 벡터로 전달 (--> ****오답노트****)
+    output reg Center_out // 중심 셀의 다음 상태
+>>>>>>> 3649abad0195713268ecd6ef453653b0ce27084f
 );
-    wire    [2:0] UnitGrid [0:2];
+    
     wire [3:0] Sum;
 
+<<<<<<< HEAD
 // checking logic
     assign  UnitGrid = Grid3_in;
     assign  Sum =       UnitGrid[0][0]
@@ -71,32 +104,24 @@ always @(posedge clk) begin
         Center_out  <=  data;
     end
     else    begin
+=======
+    // 주변 셀 합산
+    assign Sum = Grid3_in[0] + Grid3_in[1] + Grid3_in[2] +
+                 Grid3_in[3] +            Grid3_in[5] +
+                 Grid3_in[6] + Grid3_in[7] + Grid3_in[8];
+
+    // Center값 전환 로직
+    always @(*) begin
+>>>>>>> 3649abad0195713268ecd6ef453653b0ce27084f
         casex (Sum)
-            4'b000x :    Center_out <= 0;               //DEATH <- lack of population
-            4'b0010 :    Center_out <= UnitGrid[1][1];  //maintain 
-            4'b0011 :    Center_out <=  1;              //live
-            default :    Center_out <=  0;              //DEATH <- overpopulation 
+            4'b000x : Center_out = 0;               // DEATH: 인구 부족
+            4'b0010 : Center_out = Grid3_in[4];    // 유지
+            4'b0011 : Center_out = 1;              // 생성
+            default : Center_out = 0;              // DEATH: 과잉 인구
         endcase
     end
+<<<<<<< HEAD
 end     	
+=======
+>>>>>>> 3649abad0195713268ecd6ef453653b0ce27084f
 endmodule
-
-    // for (i=0;i<256;i=i+1) begin: COMBI
-    //     // assign  VirtualQ = {q[i],q,q[15]};
-    // wire   [1:0]    SUM;
-    
-
-
-    // generate   
-    //         for (i=0;i<16;i=i+1) begin: COMBI
-    //             assign  Next_q[16*i+15 : 16*i] = VirtualGrid[i];
-    //         end
-    // endgenerate
-    
-    // // SEQUENTIAL LOGIC OF Next_q
-    // always @(posedge clk) begin
-    //     if (load) begin
-    //             q    <=     data;
-    //     end
-    //     else    q    <=     Next_q;
-    // end
