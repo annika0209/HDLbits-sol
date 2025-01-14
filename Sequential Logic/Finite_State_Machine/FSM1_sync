@@ -1,14 +1,14 @@
 module top_module (
-    input   clk,
-    input   areset,	//Asynchronous reset to state B
-	input	in,
-    output	out
+    input clk,
+    input reset,    // Synchronous reset to state B
+    input in,
+    output out
 );
-	// DFF	uDFF(.clk(clk),	.rst(areset), .D(), .Q(out));
-	localparam A = 0;
-	localparam B = 1;
-	reg 	state;
-	reg 	next_state;
+
+	localparam A = 0	;
+	localparam B = 1	;
+	reg 	state		;
+	reg 	next_state	;
 
     always @(*) begin    // This is a combinational always block
         casex (state)
@@ -18,9 +18,9 @@ module top_module (
 		endcase	// State transition logic
     end
 
-    always @(posedge clk or posedge areset) begin    // This is a sequential always block
-        // State flip-flops with asynchronous reset
-		if (areset) begin
+    always @(posedge clk) begin    // This is a sequential always block
+        // State flip-flops with synchronous reset
+		if (reset) begin
 			state <= B;
 		end else begin
 			state <= next_state;
