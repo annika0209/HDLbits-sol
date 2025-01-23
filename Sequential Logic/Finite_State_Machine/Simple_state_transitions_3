@@ -1,50 +1,47 @@
-// module top_module (
-//     input   clk,
-//     input   areset,	//Asynchronous reset to state B
-// 	input	in,
-//     output	out
-// );
-// 	// DFF	uDFF(.clk(clk),	.rst(areset), .D(), .Q(out));
-// 	localparam A = 0;
-// 	localparam B = 1;
-// 	reg 	state;
-// 	reg 	next_state;
-
-//     always @(*) begin    // This is a combinational always block
-//         casex (state)
-// 			A 		:	next_state = in ? A	: B;	
-// 			B 		: 	next_state = in ? B	: A;
-// 			default	: 	next_state = B;
-// 		endcase	// State transition logic
-//     end
-
-//     always @(posedge clk or posedge areset) begin    // This is a sequential always block
-//         // State flip-flops with asynchronous reset
-// 		if (areset) begin
-// 			state <= B;
-// 		end else begin
-// 			state <= next_state;
-// 		end
-// 	end
-
-//     // Output logic
-//     assign out = (state == B);
-
-// endmodule
+/*
+    The following is the state transition table 
+    for a Moore state machine with one input, one output, and four states. 
+    
+    Use the following state encoding: A=2'b00, B=2'b01, C=2'b10, D=2'b11.
+    
+    Implement only the state transition logic and output logic (the combinational logic portion) for this state machine. Given the current state (state), compute the next_state and output (out) based on the state transition table.
+*/
 
 
+module top_module(
+    input in,
+    input   [1:0] state,
+    output  [1:0] next_state,
+    output out); //
 
-// // module DFF #(BITWIDTH = 1)	(
-// // 	input					clk,
-// // 	input	[BITWIDTH-1:0]	D,
-// // 	input					rst,
-// // 	output	[BITWIDTH-1:0]	Q
-// // );
-// // 	always @(posedge clk) begin
-// // 		if (rst) begin
-// // 			Q <= (BITWIDTH)'b0;
-// // 		end else begin
-// // 			Q <= D
-// // 		end
-// // 	end
-// // endmodule
+    parameter A=0, B=1, C=2, D=3;
+
+    // State transition logic: next_state = f(state, in)
+
+    // Output logic:  out = f(state) for a Moore state machine
+
+endmodule
+    
+    
+    
+    
+    
+    // always @(*) begin    // This is a combinational always block
+    //     casex (state)
+	// 		OFF		:	next_state = j ? ON		: OFF	;	
+	// 		ON		: 	next_state = k ? OFF	: ON	;
+	// 		default	: 	next_state = OFF;
+	// 	endcase	// State transition logic
+    // end
+
+    // always @(posedge clk) begin    // This is a sequential always block
+    //     // State flip-flops with synchronous reset
+	// 	if (reset) begin
+	// 		state <= OFF;
+	// 	end else begin
+	// 		state <= next_state;
+	// 	end
+	// end
+
+    // // Output logic
+    // assign out = (state == ON);
