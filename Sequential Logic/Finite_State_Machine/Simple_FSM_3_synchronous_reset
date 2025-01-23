@@ -1,50 +1,45 @@
-// module top_module (
-//     input   clk,
-//     input   areset,	//Asynchronous reset to state B
-// 	input	in,
-//     output	out
-// );
-// 	// DFF	uDFF(.clk(clk),	.rst(areset), .D(), .Q(out));
-// 	localparam A = 0;
-// 	localparam B = 1;
-// 	reg 	state;
-// 	reg 	next_state;
-
-//     always @(*) begin    // This is a combinational always block
-//         casex (state)
-// 			A 		:	next_state = in ? A	: B;	
-// 			B 		: 	next_state = in ? B	: A;
-// 			default	: 	next_state = B;
-// 		endcase	// State transition logic
-//     end
-
-//     always @(posedge clk or posedge areset) begin    // This is a sequential always block
-//         // State flip-flops with asynchronous reset
-// 		if (areset) begin
-// 			state <= B;
-// 		end else begin
-// 			state <= next_state;
-// 		end
-// 	end
-
-//     // Output logic
-//     assign out = (state == B);
-
-// endmodule
 
 
 
-// // module DFF #(BITWIDTH = 1)	(
-// // 	input					clk,
-// // 	input	[BITWIDTH-1:0]	D,
-// // 	input					rst,
-// // 	output	[BITWIDTH-1:0]	Q
-// // );
-// // 	always @(posedge clk) begin
-// // 		if (rst) begin
-// // 			Q <= (BITWIDTH)'b0;
-// // 		end else begin
-// // 			Q <= D
-// // 		end
-// // 	end
-// // endmodule
+
+// The following is the state transition table for a Moore state machine with one input, one output, and four states. 
+// Implement this state machine. Include an asynchronous reset that resets the FSM to state A.
+
+module top_module(
+    input clk,
+    input in,
+    input reset,
+    output out); 
+
+	localparam A = 2'b00;
+	localparam B = 2'b01;
+	localparam C = 2'b10;
+	localparam D = 2'b11;
+
+	reg 	[1:0]   state       ;
+	reg 	[1:0]   next_state  ;
+
+    always @(*) begin    // This is a combinational always block for a state transition
+        casex (state)
+			A 		:	next_state = in ? B	: A;	
+			B 		: 	next_state = in ? B	: C;
+			C 		: 	next_state = in ? D	: A;
+			D 		: 	next_state = in ? B	: C;
+			default	: 	next_state = B;
+		endcase	// State transition logic
+    end
+
+    always @(posedge clk) begin    // This is a sequential always block
+        // State flip-flops with asynchronous reset
+		if (reset) begin
+			state <= A;
+		end else begin
+			state <= next_state;
+		end
+	end
+
+    // Output logic
+    assign out = (state == D);
+
+endmodule
+

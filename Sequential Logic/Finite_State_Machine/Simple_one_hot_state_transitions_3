@@ -14,16 +14,16 @@ module top_module(
     //     state <= next_state;
     // end
 
-    localparam A = 4'b0001;
-    localparam B = 4'b0010;
-    localparam C = 4'b0100;
-    localparam D = 4'b1000;
+    localparam A = 0;
+    localparam B = 1;
+    localparam C = 2;
+    localparam D = 3;
     //state transition logic 
 
-	assign	next_state[0] =	(state[0]&(~in))|(state[2]&(~in));			// A 상태로 변하는 경우	 
-	assign	next_state[1] =	(state[0]&in)|(state[1]&in)|(state[3]&in);	// B 상태로 변하는 경우
-	assign	next_state[2] =	(state[1]&(~in))|(state[3]&(~in));			// C 상태로 변하는 경우 
-	assign	next_state[3] =	(state[2]&(in));							// D 상태로 변하는 경우
+    assign	next_state[A] =	(state[0]&(~in))|(state[2]&(~in));			// A 상태로 변하는 경우	 
+    assign	next_state[B] =	(state[0]&in)|(state[1]&in)|(state[3]&in);	// B 상태로 변하는 경우
+    assign	next_state[C] =	(state[1]&(~in))|(state[3]&(~in));			// C 상태로 변하는 경우 
+    assign	next_state[D] =	(state[2]&(in));							// D 상태로 변하는 경우
 
     // always @(*) begin
     //     case (state)
