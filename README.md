@@ -64,3 +64,4 @@
 # AnnikaMoon     C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0123
 # AnnikaMoon     ./push.sh      completed_0123
 >>>>>>> 0dcdbf70988b19f413c71a385e172e583de9d4b2
+# AnnikaMoon     C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0125
