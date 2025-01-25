@@ -1,50 +1,79 @@
-// module top_module (
-//     input   clk,
-//     input   areset,	//Asynchronous reset to state B
-// 	input	in,
-//     output	out
-// );
-// 	// DFF	uDFF(.clk(clk),	.rst(areset), .D(), .Q(out));
-// 	localparam A = 0;
-// 	localparam B = 1;
-// 	reg 	state;
-// 	reg 	next_state;
+//      Exams/ece241 2013 q4
 
-//     always @(*) begin    // This is a combinational always block
-//         casex (state)
-// 			A 		:	next_state = in ? A	: B;	
-// 			B 		: 	next_state = in ? B	: A;
-// 			default	: 	next_state = B;
-// 		endcase	// State transition logic
-//     end
+// 3개의 1bit 입력 센서들을 경계로 4개의 수위 영역 존재
+// 한가지 입력(s), 두가지 출력(fr1/2/3과 dfr) 존재 
+// --> dfr은 수위가 감소할 때만 ON, fr1/2/3은 수위에 완전히 의존
+// --> 무어머신이므로 output이 state에만 의존 => state를 최대한 세분화
+// --> state : 절대적인 수위 레벨 4가지와, 중간 수위 2가지의 UP or DN 경우까지 고려
+// (6개의 state) : 
+// 				s1,2,3 on		D
+// 				s1,2만 on		CDN	CUP
+// 				s1만   on		BDN BUP
+// 				all    off		A
 
-//     always @(posedge clk or posedge areset) begin    // This is a sequential always block
-//         // State flip-flops with asynchronous reset
-// 		if (areset) begin
-// 			state <= B;
-// 		end else begin
-// 			state <= next_state;
-// 		end
-// 	end
+module top_module (
+    input clk,
+    input reset,
+    input [3:1] s,
+    output fr3,
+    output fr2,
+    output fr1,
+    output dfr
+); 
+										//		dfr			FR
+localparam [2:0] D  	=	3'b101	;	//5		0			3'b000
+localparam [2:0] CUP  	=	3'b100	;	//4		0			3'b001
+localparam [2:0] CDN  	=	3'b011	;	//3		1			3'b000
+localparam [2:0] BUP  	=	3'b010	;	//2		0			3'b011
+localparam [2:0] BDN  	=	3'b001	;	//1		1			3'b000
+localparam [2:0] A  	=	3'b000	;	//0		1			3'b111
 
-//     // Output logic
-//     assign out = (state == B);
+// wire [2:0] IN;
+// reg  [3:0] FR;
+reg  [2:0] state;
+reg  [2:0] next_state;
 
-// endmodule
+
+//DFF
+always @(posedge clk ) begin
+	if (reset) begin
+		state	<= 	A;	
+	end 
+	else begin
+		state	<= 	next_state;
+	end
+end
+
+//state transition
+always @(*) begin
+	casex (state)
+		D		: 	next_state = s[3] ?	D					:	CDN;
+		CDN 	:	next_state = s[2] ?	(s[3] ?	D : CDN) 	: 	BDN;
+		CUP 	:	next_state = s[2] ?	(s[3] ?	D : CUP) 	: 	BDN;
+		BDN 	:	next_state = s[1] ?	(s[2] ?	CUP : BDN) 	: 	A;
+		BUP 	:	next_state = s[1] ?	(s[2] ?	CUP : BUP) 	: 	A;
+		A		: 	next_state = s[1] ?	BUP					:	A;
+		default	:	next_state = A; 
+	endcase
+end
+
+//output logic 
+// assign	IN = {s[3],s[2],s[1]};
+always @(*) begin
+	// FR = {fr3, fr2, fr1, dfr};
+	casex (state)
+		D	:	{fr3, fr2, fr1, dfr} = 4'b0000;		
+		CUP	:	{fr3, fr2, fr1, dfr} = 4'b0010;		
+		CDN	:	{fr3, fr2, fr1, dfr} = 4'b0011;		
+		BUP	:	{fr3, fr2, fr1, dfr} = 4'b0110;		
+		BDN	:	{fr3, fr2, fr1, dfr} = 4'b0111;		
+		A	:	{fr3, fr2, fr1, dfr} = 4'b1111;		
+		default: {fr3, fr2, fr1, dfr} = 4'bx;  
+	endcase
+end
+
+// assign	FR	=	; 
+// assign	dfr = 	;
 
 
-
-// // module DFF #(BITWIDTH = 1)	(
-// // 	input					clk,
-// // 	input	[BITWIDTH-1:0]	D,
-// // 	input					rst,
-// // 	output	[BITWIDTH-1:0]	Q
-// // );
-// // 	always @(posedge clk) begin
-// // 		if (rst) begin
-// // 			Q <= (BITWIDTH)'b0;
-// // 		end else begin
-// // 			Q <= D
-// // 		end
-// // 	end
-// // endmodule
+endmodule
