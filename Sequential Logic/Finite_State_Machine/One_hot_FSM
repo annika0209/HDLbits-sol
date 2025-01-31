@@ -1,50 +1,45 @@
-// module top_module (
-//     input   clk,
-//     input   areset,	//Asynchronous reset to state B
-// 	input	in,
-//     output	out
-// );
-// 	// DFF	uDFF(.clk(clk),	.rst(areset), .D(), .Q(out));
-// 	localparam A = 0;
-// 	localparam B = 1;
-// 	reg 	state;
-// 	reg 	next_state;
+module top_module(
+    input in,
+    input [9:0] state,
+    output [9:0] next_state,
+    output out1,
+    output out2);
 
-//     always @(*) begin    // This is a combinational always block
-//         casex (state)
-// 			A 		:	next_state = in ? A	: B;	
-// 			B 		: 	next_state = in ? B	: A;
-// 			default	: 	next_state = B;
-// 		endcase	// State transition logic
-//     end
+    parameter S0 = 0;
+    parameter S1 = 1;
+    parameter S2 = 2;
+    parameter S3 = 3;
+    parameter S4 = 4;
+    parameter S5 = 5;
+    parameter S6 = 6;
+    parameter S7 = 7;
+    parameter S8 = 8;
+    parameter S9 = 9;
+    
+    // always @(posedge clk ) begin
+    //     if (reset) begin
+    //         state <= 9'b1;
+    //     end else begin
+    //         state <= next_state;
+    //     end
+    // end
 
-//     always @(posedge clk or posedge areset) begin    // This is a sequential always block
-//         // State flip-flops with asynchronous reset
-// 		if (areset) begin
-// 			state <= B;
-// 		end else begin
-// 			state <= next_state;
-// 		end
-// 	end
+	//state transition logic
+	assign	next_state[S0] = (state[9]|state[8]|state[7]|
+							  state[4]|state[3]|state[2]|
+							  		   state[1]|state[0])	&(~in)  ;
+	assign	next_state[S1] = (state[9]|state[8]|state[0])	&(in)   ;
+	assign	next_state[S2] = (state[1])						&(in)   ;
+	assign	next_state[S3] = (state[2])						&(in)   ;
+	assign	next_state[S4] = (state[3])						&(in)   ;
+	assign	next_state[S5] = (state[4])						&(in)   ;
+	assign	next_state[S6] = (state[5])						&(in)   ;
+	assign	next_state[S7] = (state[7]|state[6])			&(in)   ;
+	assign	next_state[S8] = (state[5])						&(~in)  ;
+	assign	next_state[S9] = (state[6])						&(~in)  ;
 
-//     // Output logic
-//     assign out = (state == B);
+	//output logic
+    assign  out1 = (state[S8])|(state[S9]);
+    assign  out2 = (state[S7])|(state[S9]);
 
-// endmodule
-
-
-
-// // module DFF #(BITWIDTH = 1)	(
-// // 	input					clk,
-// // 	input	[BITWIDTH-1:0]	D,
-// // 	input					rst,
-// // 	output	[BITWIDTH-1:0]	Q
-// // );
-// // 	always @(posedge clk) begin
-// // 		if (rst) begin
-// // 			Q <= (BITWIDTH)'b0;
-// // 		end else begin
-// // 			Q <= D
-// // 		end
-// // 	end
-// // endmodule
+endmodule

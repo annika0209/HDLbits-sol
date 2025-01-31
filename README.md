@@ -55,10 +55,19 @@
 # AnnikaMoon     C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_
 # AnnikaMoon     C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_
 # AnnikaMoon     C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0120
+<<<<<<< HEAD
+# AnnikaMoon     C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0125
+=======
 # AnnikaMoon     ./push.sh      completed_
 # AnnikaMoon     ./push.sh      completed_0123
 # AnnikaMoon     C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_
 # AnnikaMoon     C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0123
 # AnnikaMoon     ./push.sh      completed_0123
+<<<<<<< HEAD
 # AnnikaMoon     C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_
+# AnnikaMoon     C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0131
+=======
+>>>>>>> 0dcdbf70988b19f413c71a385e172e583de9d4b2
+# AnnikaMoon     C:\Users\annik\HDLbits_git\HDLbits_sol\push.sh      completed_0125
+>>>>>>> 5ffe8784e200a5152bdf51df7d026ffa65aa5b5b
 # AnnikaMoon     C:\Users\annik\OneDrive\문서\GitHub\HDLbits_sol\push.sh      completed_0131
