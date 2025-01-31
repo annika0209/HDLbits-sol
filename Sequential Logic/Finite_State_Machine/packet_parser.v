@@ -30,8 +30,8 @@ module top_module(
     always @(*) begin
         casex (state)
             READY       :    next_state = in[3] ?   M_START     :   READY       ; 
-            M_START     :    next_state = in[3] ?   READY       :   M_SECOND    ; 
-            M_SECOND    :    next_state = in[3] ?   READY       :   M_RECIEVED  ; 
+            M_START     :    next_state = M_SECOND                              ; 
+            M_SECOND    :    next_state = M_RECIEVED                            ; 
             M_RECIEVED  :    next_state = in[3] ?   M_START     :   READY       ; 
             default     :    next_state = READY;
         endcase
@@ -48,5 +48,5 @@ module top_module(
 
     // Output logic
     assign  done = (state == M_RECIEVED);
-       
+
 endmodule
