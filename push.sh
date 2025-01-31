@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "# AnnikaMoon     $0      completed_$1" >> README.md
+echo "# AnnikaMoon   completed_$1" >> README.md
 #git init
 git add . #()
 git commit -m "$1"   #올릴때마다 히스토리(부연설명) 만들어줌
