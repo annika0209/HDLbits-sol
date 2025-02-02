@@ -61,7 +61,7 @@ module UnitBox_3 (
 
     // 주변 셀 합산
     assign Sum = Grid3_in[0] + Grid3_in[1] + Grid3_in[2] +
-                 Grid3_in[3] +            Grid3_in[5] +
+                 Grid3_in[3] +               Grid3_in[5] +
                  Grid3_in[6] + Grid3_in[7] + Grid3_in[8];
 
     // Center값 전환 로직
