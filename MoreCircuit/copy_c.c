@@ -25,7 +25,8 @@ int main(void)
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
         int copy[SIZE][SIZE]={0,};
     int check=0;
     while(1){
@@ -37,7 +38,8 @@ int main(void)
         copy1(ori,copy);
         scanf("%d", &check);
         if(check==2)
-            break;}
+            break;
+        }
     return 0;}
 void birth(int ori[][SIZE],int cpy[][SIZE])
 {    int count=0;
@@ -77,8 +79,12 @@ void copy1(int ori[][SIZE],int cpy[][SIZE])
     int *endp= &ori[SIZE-1][SIZE-1];
     int *cp=&cpy[0][0];
     while(p<=endp)
-    {*p=*cp;
-    p++;cp++;}}
+    {
+        *p=*cp;
+        p++;
+        cp++;
+    }
+}
 
 void death(int ori[][SIZE],int cpy[][SIZE])
 {    int count=0;
