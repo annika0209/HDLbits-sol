@@ -1,50 +1,69 @@
-// module top_module (
-//     input   clk,
-//     input   areset,	//Asynchronous reset to state B
-// 	input	in,
-//     output	out
-// );
-// 	// DFF	uDFF(.clk(clk),	.rst(areset), .D(), .Q(out));
-// 	localparam A = 0;
-// 	localparam B = 1;
-// 	reg 	state;
-// 	reg 	next_state;
+/*
+See also: PS/2 packet parser.
 
-//     always @(*) begin    // This is a combinational always block
-//         casex (state)
-// 			A 		:	next_state = in ? A	: B;	
-// 			B 		: 	next_state = in ? B	: A;
-// 			default	: 	next_state = B;
-// 		endcase	// State transition logic
-//     end
+Now that you have a state machine that will identify three-byte messages in a PS/2 byte stream, 
+add a datapath that will also output the 24-bit (3 byte) message whenever a packet is received 
+(out_bytes[23:16] is the first byte, out_bytes[15:8] is the second byte, etc.).
 
-//     always @(posedge clk or posedge areset) begin    // This is a sequential always block
-//         // State flip-flops with asynchronous reset
-// 		if (areset) begin
-// 			state <= B;
-// 		end else begin
-// 			state <= next_state;
-// 		end
-// 	end
+out_bytes needs to be valid whenever the done signal is asserted. You may output anything at other times (i.e., don't-care).
 
-//     // Output logic
-//     assign out = (state == B);
+For example:
+*/
 
-// endmodule
+module top_module(
+    input clk,
+    input [7:0] in,
+    input reset,    // Synchronous reset
+    output reg [23:0] out_bytes,
+    output done);
+
+    parameter READY      = 2'b00;
+    parameter M_START    = 2'b01;
+    parameter M_SECOND   = 2'b11;
+    parameter M_RECIEVED = 2'b10;
+
+    wire    [23:0] ready_out_bytes;
+    reg     [3:0]   state;
+    reg     [3:0]   next_state;
+    reg     [7:0]   M1;
+    reg     [7:0]   M2;
 
 
+    // State transition logic (combinational)
+    always @(*) begin
+        casex (state)
+            READY       :    next_state = in[3] ?   M_START     :   READY       ; 
+            M_START     :    next_state = M_SECOND                              ; 
+            M_SECOND    :    next_state = M_RECIEVED                            ; 
+            M_RECIEVED  :    next_state = in[3] ?   M_START     :   READY       ; 
+            default     :    next_state = READY;
+        endcase
+    end
 
-// // module DFF #(BITWIDTH = 1)	(
-// // 	input					clk,
-// // 	input	[BITWIDTH-1:0]	D,
-// // 	input					rst,
-// // 	output	[BITWIDTH-1:0]	Q
-// // );
-// // 	always @(posedge clk) begin
-// // 		if (rst) begin
-// // 			Q <= (BITWIDTH)'b0;
-// // 		end else begin
-// // 			Q <= D
-// // 		end
-// // 	end
-// // endmodule
+    // State flip-flops (sequential)
+    always @(posedge clk ) begin
+        if (reset) begin
+            state <= READY;
+        end else begin
+            state <= next_state;
+        end 
+    end
+
+    //Datapath to store incoming bytes.
+    always @(posedge clk ) begin
+        M2 <= in;
+        M1 <= M2; 
+    end
+
+    // Output logic
+    assign ready_out_bytes = {M1, M2, in}; 
+    
+    always @(posedge clk) begin
+        if(state == M_SECOND) begin
+            out_bytes <= ready_out_bytes;
+        end   
+    end
+
+    assign  done = (state == M_RECIEVED);
+
+endmodule
